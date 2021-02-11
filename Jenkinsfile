@@ -1,13 +1,16 @@
-pipeline {
-        agent any
-        tools { 
+
+
+pipeline{
+        agent any 
+	tools { 
         maven 'maven'  
     }
-        stages {
-          stage("build & SonarQube analysis") {
-            steps{
+        
+        stages{
+          stage('Quality Gate Statuc Check'){
+               steps{
                       script{
-                      withSonarQubeEnv('sonar') { 
+                      withSonarQubeEnv('sonarserver') { 
                       sh "mvn sonar:sonar"
                        }
                       timeout(time: 1, unit: 'HOURS') {
@@ -18,8 +21,11 @@ pipeline {
                     }
 		    sh "mvn clean install"
                   }
-      }
-}   
+                }  
+              }
+            }		
+        }     	     
+}
   
                 
   
