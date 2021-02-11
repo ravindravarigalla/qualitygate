@@ -7,7 +7,11 @@ pipeline {
           stage("build & SonarQube analysis") {
             steps {
               withSonarQubeEnv('sonar') {
-                sh 'mvn clean package sonar:sonar'
+                sh """
+                   mvn sonar:sonar \
+                     -Dsonar.projectKey=frontend \
+                     -Dsonar.host.url=http://34.123.57.82:9000 \
+                     -Dsonar.login=new
               }
             }
           }
