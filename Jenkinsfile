@@ -3,7 +3,7 @@ node {
     git 'https://github.com/ravindravarigalla/qualitygate.git'
   }
   stage('SonarQube analysis') {
-    withSonarQubeEnv('My SonarQube Server') {
+    withSonarQubeEnv('sonar') {
       sh 'mvn clean package sonar:sonar'
     } // submitted SonarQube taskId is automatically attached to the pipeline context
   }
