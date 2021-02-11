@@ -1,4 +1,7 @@
 node {
+  tools { 
+        maven 'maven'  
+    }
   stage('SCM') {
     git 'https://github.com/ravindravarigalla/qualitygate.git'
   }
