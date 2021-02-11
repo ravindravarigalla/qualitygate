@@ -4,23 +4,20 @@ pipeline {
         maven 'maven'  
     }
         stages {
-          stage ("SonarQube analysis") {
-             steps {
-                withSonarQubeEnv('SonarQube') {
-                  sh """
-                     mvn sonar:sonar \
-                       -Dsonar.projectKey=frontend \
-                       -Dsonar.host.url=http://34.123.57.82:9000 \
-                       -Dsonar.login=e567ff410914cba833593e9d78c6128f58010102
-                     """
-      }
-
-      def qualitygate = waitForQualityGate()
-      if (qualitygate.status != "OK") {
-         error "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
-          }
-        }
-      }            
+          stage('SonarQube analysis') {
+              withSonarQubeEnv('My SonarQube Server') {
+                 sh 'mvn clean package sonar:sonar'
+    } // SonarQube taskId is automatically attached to the pipeline context
+  }
+}
+stage("Quality Gate"){
+    timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
+    def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+    if (qg.status != 'OK') {
+        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+    }
+  }
+}
   }
 }   
   
