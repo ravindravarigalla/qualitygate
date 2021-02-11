@@ -1,6 +1,6 @@
 node {
   stage('SCM') {
-    git ''
+    git 'https://github.com/ravindravarigalla/qualitygate.git'
   }
   stage('SonarQube analysis') {
     withSonarQubeEnv('My SonarQube Server') {
