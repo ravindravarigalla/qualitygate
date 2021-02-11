@@ -4,23 +4,23 @@ pipeline {
         maven 'maven'  
     }
         stages {
-          stage("build & SonarQube analysis") {
-            steps {
-              withSonarQubeEnv('sonar') {
-                sh """
-                   mvn sonar:sonar \
-                     -Dsonar.projectKey=frontend \
-                     -Dsonar.host.url=http://34.123.57.82:9000 \
-                     -Dsonar.login=e567ff410914cba833593e9d78c6128f58010102
+          stage ("SonarQube analysis") {
+             steps {
+                withSonarQubeEnv('SonarQube') {
+                  sh """
+                     mvn sonar:sonar \
+                       -Dsonar.projectKey=frontend \
+                       -Dsonar.host.url=http://34.123.57.82:9000 \
+                       -Dsonar.login=e567ff410914cba833593e9d78c6128f58010102
                      """
-              }
-            }
-          }
-        stage("Quality Gate 1") {
-            steps {
-                waitForQualityGate abortPipeline: true
-            }
-        }
       }
+
+      def qualitygate = waitForQualityGate()
+      if (qualitygate.status != "OK") {
+         error "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
+          }
+        }
+      }            
+  }
 }   
   
