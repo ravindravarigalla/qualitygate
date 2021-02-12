@@ -1,10 +1,5 @@
 pipeline {
 
-  environment {
-    IMAGE_TAG = "trainingad1/ms-ref-service-a"
-    JENKINS_CRED = "${PROJECT}"
-  }
-
   agent {
     kubernetes {
       
@@ -33,7 +28,7 @@ spec:
   stages {
     stage('build') {
       steps {
-          withSonarQubeEnv('SonarQube') {
+        withSonarQubeEnv('SonarQube') {
         container('maven') {
           sh """
             #echo "******** currently executing Build stage ********"
@@ -48,10 +43,8 @@ spec:
                 waitForQualityGate abortPipeline: true
             }
         }
-    
-    }
+      }
   }
-}
 
   
   
