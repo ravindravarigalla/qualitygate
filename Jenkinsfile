@@ -1,5 +1,10 @@
 pipeline {
 
+  environment {
+    IMAGE_TAG = "trainingad1/ms-ref-service-a"
+    JENKINS_CRED = "${PROJECT}"
+  }
+
   agent {
     kubernetes {
       
@@ -25,27 +30,26 @@ spec:
 """
 }
   }
-    stages {
-        stage('Clone sources') {
-            steps {
-                git branch: 'bad-code', url: 'https://github.com/tkgregory/sonarqube-jacoco-code-coverage.git'
-            }
+  stages {
+    stage('build') {
+      steps {
+          withSonarQubeEnv('SonarQube') {
+        container('maven') {
+          sh """
+            #echo "******** currently executing Build stage ********"
+            mvn  sonar:sonar
+          """
         }
-        stage('SonarQube analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh "./gradlew sonarqube"
-                }
-            }
-        }
-        stage("Quality gate") {
+      }
+    }
+  }
+  stage("Quality gate") {
             steps {
                 waitForQualityGate abortPipeline: true
             }
         }
+    
     }
   }
 
 
-  
-  
