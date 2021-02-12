@@ -25,7 +25,6 @@ spec:
 """
 }
   }
-  stages {
     stages {
         stage('Clone sources') {
             steps {
