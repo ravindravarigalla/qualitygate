@@ -6,27 +6,24 @@ pipeline {
         stages {
           stage("build & SonarQube analysis") {
             steps {
-              withSonarQubeEnv('SonarQube') {
+              withSonarQubeEnv('sonar') {
                 sh """
                    mvn sonar:sonar \
-                     -Dsonar.projectKey=my-app \
+                     -Dsonar.projectKey=frontend \
                      -Dsonar.host.url=http://34.123.57.82:9000 \
-                     -Dsonar.login=c2944e9d29259a3084d914591fa3a05d8d044d32
+                     -Dsonar.login=e567ff410914cba833593e9d78c6128f58010102
                      """
-            
+              }
             }
           }
-        stage("Quality gate") {
+         stage("Quality Gate") {
             steps {
                 waitForQualityGate abortPipeline: true
+              }
             }
-        }
+          }
       }
-   }   
-}       
-
   
-    
   
                 
   
