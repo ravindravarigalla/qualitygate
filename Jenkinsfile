@@ -6,7 +6,7 @@ pipeline {
         stages {
           stage("build & SonarQube analysis") {
             steps {
-              withSonarQubeEnv('sonar') {
+              withSonarQubeEnv('SonarQube') {
                 sh """
                    mvn sonar:sonar \
                      -Dsonar.projectKey=frontend \
