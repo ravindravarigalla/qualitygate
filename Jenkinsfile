@@ -26,25 +26,27 @@ spec:
 }
   }
   stages {
-    stage('build') {
-      steps {
-        withSonarQubeEnv('SonarQube') {
-        container('maven') {
-          sh """
-            #echo "******** currently executing Build stage ********"
-            mvn  sonar:sonar
-          """
+    stages {
+        stage('Clone sources') {
+            steps {
+                git branch: 'bad-code', url: 'https://github.com/tkgregory/sonarqube-jacoco-code-coverage.git'
+            }
         }
-      }
-    }
-  }
-  stage("Quality gate") {
+        stage('SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh "./gradlew sonarqube"
+                }
+            }
+        }
+        stage("Quality gate") {
             steps {
                 waitForQualityGate abortPipeline: true
             }
         }
-      }
+    }
   }
+} 
 
   
   
