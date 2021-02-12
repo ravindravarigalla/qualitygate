@@ -1,26 +1,27 @@
 pipeline {
-        agent any
-        tools { 
-        maven 'maven'  
-    }
-        stages {
-          stage("build & SonarQube analysis") {
+    agent any
+
+    stages {
+        stage('Clone sources') {
             steps {
-              withSonarQubeEnv('SonarQube') {
-                sh """
-                   mvn sonar:sonar 
-                     """
-              }
+                git url: 'https://github.com/tkgregory/sonarqube-jacoco-code-coverage.git'
             }
-          }
-         stage("Quality Gate") {
+        }
+
+        stage('SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh "./gradlew sonarqube"
+                }
+            }
+        }
+        stage("Quality gate") {
             steps {
                 waitForQualityGate abortPipeline: true
-              }
             }
-          }
-      }
-  
+        }
+    }
+}
   
                 
   
