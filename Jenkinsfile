@@ -37,10 +37,7 @@ spec:
         container('maven') {
           sh """
             #echo "******** currently executing Build stage ********"
-            mvn sonar:sonar \
-              -Dsonar.projectKey=adservice \
-              -Dsonar.host.url=http://34.123.57.82:9000 \
-              -Dsonar.login=1836b6c41719b780d9ad485de6f364e3dc8e9aa4
+            mvn sonar:sonar 
           """
         }
       }
